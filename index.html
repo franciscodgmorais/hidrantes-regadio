@@ -21,6 +21,11 @@ h2{font-size:1.12rem;margin:18px 0 10px}.searchrow{display:flex;gap:8px}.search{
 .detail{display:none;background:white;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}.detail.open{display:block}.detail h2{margin:0 0 8px}.detailgrid{display:grid;grid-template-columns:1fr;gap:10px;margin:12px 0}.field{padding:10px;background:#f5f8f5;border-radius:10px}.field small{display:block;color:var(--muted);margin-bottom:3px}.field strong{overflow-wrap:anywhere}.note{font-size:.85rem;color:var(--muted);line-height:1.5}.hidden{display:none!important}footer{max-width:850px;margin:auto;padding:0 16px 24px;color:var(--muted);font-size:.8rem}
 @media(min-width:620px){main{padding:22px}.detailgrid{grid-template-columns:1fr 1fr}.list{grid-template-columns:1fr 1fr}.summary{grid-template-columns:1fr 1fr}}
 </style>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <header><div class="headerrow">
@@ -40,7 +45,7 @@ h2{font-size:1.12rem;margin:18px 0 10px}.searchrow{display:flex;gap:8px}.search{
 </section>
 <section id="mapView" class="hidden">
 <h2>Localização relativa dos hidrantes</h2>
-<div class="mapwrap"><div class="maptop">Esquema offline baseado nas coordenadas GPS — não representa estradas nem substitui cartografia topográfica.</div><div id="schematic"></div></div>
+<div class="mapwrap"><div class="maptop">Esquema offline baseado nas coordenadas GPS — não representa estradas nem substitui cartografia topográfica.</div><div id="map" style="width:100%; height:450px; border-radius:12px;"></div>
 <div class="note" style="margin-top:10px">Toque num ponto numerado para abrir a ficha do hidrante. Para navegação rodoviária, use o botão Google Maps na ficha; a navegação pode exigir Internet ou mapas offline previamente descarregados.</div>
 </section>
 <section class="panel" style="margin-top:18px">
@@ -72,15 +77,43 @@ function renderList(){
  $('#empty').hidden=shown.length>0;
  document.querySelectorAll('[data-detail]').forEach(b=>b.onclick=()=>showDetail(points.find(p=>p.id===Number(b.dataset.detail))));
 }
+GitHub, seleciona desde function renderMap(){ até ao último } que enviaste e substitui tudo por este código:
+
 function renderMap(){
- const W=700,H=470,pad=60;
- const minLat=Math.min(...points.map(p=>p.lat)),maxLat=Math.max(...points.map(p=>p.lat));
- const minLon=Math.min(...points.map(p=>p.lon)),maxLon=Math.max(...points.map(p=>p.lon));
- const x=p=>pad+(p.lon-minLon)/(maxLon-minLon)*(W-2*pad);
- const y=p=>H-pad-(p.lat-minLat)/(maxLat-minLat)*(H-2*pad);
- const dots=points.map(p=>`<g data-map-point="${p.id}" tabindex="0" role="button" aria-label="${esc(p.name)}" style="cursor:pointer"><circle cx="${x(p)}" cy="${y(p)}" r="18" fill="#176b49" stroke="#fff" stroke-width="3"/><text x="${x(p)}" y="${y(p)+5}" text-anchor="middle" font="bold 14px system-ui" fill="#fff">${p.id}</text><text class="maplabel" x="${x(p)+23}" y="${y(p)-8}">${esc('H'+p.id)}</text></g>`).join('');
- $('#schematic').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mapa esquemático offline dos sete hidrantes"><rect width="${W}" height="${H}" fill="#e8f0e6"/><path d="M0 90 Q150 140 240 75 T460 120 T700 65 M-20 320 Q130 270 270 340 T510 290 T730 355" fill="none" stroke="#d4e2d0" stroke-width="22"/><path d="M0 90 Q150 140 240 75 T460 120 T700 65 M-20 320 Q130 270 270 340 T510 290 T730 355" fill="none" stroke="#f9fcf8" stroke-width="3" stroke-dasharray="7 8"/><text class="mapnote" x="20" y="28">N ↑</text><path d="M32 38v30m0-30-7 10m7-10 7 10" stroke="#526459" stroke-width="2" fill="none"/>${dots}<text class="mapnote" x="18" y="${H-18}">Esquema relativo · não navegável</text></svg>`;
- document.querySelectorAll('[data-map-point]').forEach(g=>{const go=()=>showDetail(points.find(p=>p.id===Number(g.dataset.mapPoint)));g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})});
+  const mapElement = document.getElementById('map');
+  if (!mapElement) return;
+
+  if (window.hydrantMap) {
+    window.hydrantMap.remove();
+  }
+
+  const map = L.map(mapElement).setView([40.335, -7.335], 11);
+  window.hydrantMap = map;
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  const bounds = [];
+
+  points.forEach(p => {
+    const position = [p.lat, p.lon];
+    bounds.push(position);
+
+    L.marker(position)
+      .addTo(map)
+      .bindPopup(
+        `<strong>Hidrante ${p.id}</strong><br>${esc(p.name)}`
+      )
+      .on('click', () => showDetail(p));
+  });
+
+  if (bounds.length) {
+    map.fitBounds(bounds, { padding: [25, 25] });
+  }
+
+  setTimeout(() => map.invalidateSize(), 200);
 }
 function setTab(tab){
  const isList=tab==='list';
