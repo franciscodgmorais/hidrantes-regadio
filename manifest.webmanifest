@@ -1,0 +1,19 @@
+{
+  "name": "Hidrantes do Regadio — Belmonte",
+  "short_name": "Hidrantes",
+  "description": "Consulta offline dos hidrantes do Regadio, concelho de Belmonte.",
+  "lang": "pt-PT",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7f4",
+  "theme_color": "#163b2c",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

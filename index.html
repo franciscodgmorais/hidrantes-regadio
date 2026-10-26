@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#163b2c">
+<meta name="description" content="Consulta offline dos hidrantes do Regadio, concelho de Belmonte.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>Hidrantes do Regadio</title>
+<style>
+:root{color-scheme:light;--green:#163b2c;--green2:#245a43;--mint:#d9eee2;--paper:#f4f7f4;--ink:#17231c;--muted:#5e6c63;--line:#d9e2db;--white:#fff;--blue:#1769aa}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:var(--green);color:white;padding:20px 16px 18px;position:sticky;top:0;z-index:5;box-shadow:0 3px 14px #10291e20}
+.headerrow{max-width:850px;margin:auto;display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;flex:none}.brand{font-size:1.18rem;font-weight:800;letter-spacing:.1px}.subtitle{font-size:.86rem;color:#c9dfd2}
+main{max-width:850px;margin:auto;padding:16px 14px 38px}.status{display:flex;align-items:center;gap:8px;background:#e3f4e8;border:1px solid #b8ddc4;color:#1e5936;border-radius:12px;padding:10px 12px;font-size:.9rem;margin-bottom:14px}.dot{width:9px;height:9px;border-radius:50%;background:#24934e;flex:none}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}.stat{background:white;border:1px solid var(--line);border-radius:14px;padding:13px}.stat strong{display:block;font-size:1.5rem;color:var(--green)}.stat span{font-size:.82rem;color:var(--muted)}
+.tabs{display:flex;gap:8px;margin:16px 0 12px}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px;font-weight:700;color:var(--green);cursor:pointer}.tab[aria-selected=true]{background:var(--green);color:white;border-color:var(--green)}
+h2{font-size:1.12rem;margin:18px 0 10px}.searchrow{display:flex;gap:8px}.search{width:100%;border:1px solid #bdcbc0;border-radius:12px;padding:13px 14px;font:inherit;background:#fff}.list{display:grid;gap:10px;margin-top:12px}.item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;align-items:flex-start;gap:12px}.number{width:38px;height:38px;border-radius:12px;background:var(--mint);color:var(--green);display:grid;place-items:center;font-weight:800;flex:none}.itembody{min-width:0;flex:1}.item h3{font-size:1rem;margin:1px 0 4px;line-height:1.3}.coords{color:var(--muted);font-size:.82rem;overflow-wrap:anywhere}.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:0;border-radius:10px;padding:10px 12px;font-weight:750;font-size:.9rem;cursor:pointer}.btn-primary{background:var(--green);color:white}.btn-light{background:#edf3ee;color:var(--green);border:1px solid #d8e4da}.btn:focus-visible,.tab:focus-visible,input:focus-visible{outline:3px solid #8cc7f0;outline-offset:2px}
+.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:14px}.mapwrap{background:#e9f0e8;border:1px solid #cad9cc;border-radius:15px;overflow:hidden}.maptop{padding:11px 13px;color:var(--muted);font-size:.84rem;background:#f9fbf9;border-bottom:1px solid var(--line)}svg{display:block;width:100%;height:auto;min-height:300px}.maplabel{font: bold 13px system-ui;fill:#183a2b;paint-order:stroke;stroke:#f4f7f4;stroke-width:4px;stroke-linejoin:round}.mapnote{font:12px system-ui;fill:#526459}
+.detail{display:none;background:white;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}.detail.open{display:block}.detail h2{margin:0 0 8px}.detailgrid{display:grid;grid-template-columns:1fr;gap:10px;margin:12px 0}.field{padding:10px;background:#f5f8f5;border-radius:10px}.field small{display:block;color:var(--muted);margin-bottom:3px}.field strong{overflow-wrap:anywhere}.note{font-size:.85rem;color:var(--muted);line-height:1.5}.hidden{display:none!important}footer{max-width:850px;margin:auto;padding:0 16px 24px;color:var(--muted);font-size:.8rem}
+@media(min-width:620px){main{padding:22px}.detailgrid{grid-template-columns:1fr 1fr}.list{grid-template-columns:1fr 1fr}.summary{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><div class="headerrow">
+<svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="18" fill="#d9eee2"/><path d="M32 10C25 22 18 29 18 39a14 14 0 0 0 28 0c0-10-7-17-14-29Z" fill="#176b49"/><path d="M32 29c-4 7-7 10-7 15a7 7 0 0 0 14 0c0-5-3-8-7-15Z" fill="#fff"/></svg>
+<div><div class="brand">Hidrantes do Regadio</div><div class="subtitle">Concelho de Belmonte · apoio ao abastecimento</div></div>
+</div></header>
+<main>
+<div class="status"><span class="dot"></span><span id="statusText">Dados incluídos na aplicação — consulta disponível offline.</span></div>
+<div class="summary"><div class="stat"><strong id="count">7</strong><span>hidrantes registados</span></div><div class="stat"><strong>GPS</strong><span>coordenadas guardadas no dispositivo</span></div></div>
+<section id="detail" class="detail" aria-live="polite"></section>
+<div class="tabs" role="tablist" aria-label="Vista"><button class="tab" id="listTab" role="tab" aria-selected="true">Lista</button><button class="tab" id="mapTab" role="tab" aria-selected="false">Mapa esquemático</button></div>
+<section id="listView">
+<h2>Pesquisar hidrantes</h2>
+<div class="searchrow"><input class="search" id="search" type="search" placeholder="Ex.: Malpique, EM 571…" aria-label="Pesquisar hidrantes"></div>
+<div class="list" id="list"></div>
+<p class="note" id="empty" hidden>Não foram encontrados hidrantes com essa pesquisa.</p>
+</section>
+<section id="mapView" class="hidden">
+<h2>Localização relativa dos hidrantes</h2>
+<div class="mapwrap"><div class="maptop">Esquema offline baseado nas coordenadas GPS — não representa estradas nem substitui cartografia topográfica.</div><div id="schematic"></div></div>
+<div class="note" style="margin-top:10px">Toque num ponto numerado para abrir a ficha do hidrante. Para navegação rodoviária, use o botão Google Maps na ficha; a navegação pode exigir Internet ou mapas offline previamente descarregados.</div>
+</section>
+<section class="panel" style="margin-top:18px">
+<strong>Utilização offline</strong>
+<p class="note">Depois de instalada e aberta pelo menos uma vez com Internet, a aplicação pode guardar os seus ficheiros para utilização offline. Guarde também este conjunto de ficheiros e teste-o no telemóvel antes de depender dele numa ocorrência.</p>
+</section>
+</main>
+<footer>Versão inicial · Dados importados de “Hidrantes Regadio Concelho Belmonte.gpx”. Confirme no terreno as coordenadas, acessibilidade e condições de utilização de cada ponto.</footer>
+<script>
+const points = [{"id":1,"name":"Hidrante 1 EM 571","lat":40.369111,"lon":-7.332749},{"id":2,"name":"Hidrante 2 Quinta da Ribeira","lat":40.34172,"lon":-7.323897},{"id":3,"name":"Hidrante 3 EM 563","lat":40.337889,"lon":-7.291794},{"id":4,"name":"Hidrante 4 EM 1051 Qta das Pereiras","lat":40.330615,"lon":-7.377719},{"id":5,"name":"Hidrante 5 EM 1051 Malpique","lat":40.313732,"lon":-7.362837},{"id":6,"name":"Hidrante 6 EN 18-3","lat":40.310179,"lon":-7.316784},{"id":7,"name":"Hidrante 7 EM 570","lat":40.279867,"lon":-7.339817}];
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function coords(p){return `${p.lat.toFixed(6)}, ${p.lon.toFixed(6)}`}
+function mapsUrl(p){return `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}&travelmode=driving`}
+function showDetail(p){
+ const d=$('#detail'); d.classList.add('open');
+ d.innerHTML=`<div style="display:flex;justify-content:space-between;gap:12px;align-items:start"><div><h2>${esc(p.name)}</h2><div class="coords">Hidrante ${p.id}</div></div><button class="btn btn-light" id="closeDetail" aria-label="Fechar ficha">Fechar ✕</button></div>
+ <div class="detailgrid"><div class="field"><small>Latitude</small><strong>${p.lat.toFixed(6)}</strong></div><div class="field"><small>Longitude</small><strong>${p.lon.toFixed(6)}</strong></div><div class="field" style="grid-column:1/-1"><small>Coordenadas GPS</small><strong>${coords(p)}</strong></div></div>
+ <div class="actions"><a class="btn btn-primary" href="${mapsUrl(p)}" target="_blank" rel="noopener">↗ Navegar no Google Maps</a><button class="btn btn-light" id="copyCoords">Copiar coordenadas</button></div>
+ <p class="note">A app mostra os dados guardados. O Google Maps é um serviço externo e pode precisar de Internet, salvo se tiveres descarregado previamente o mapa da zona.</p>`;
+ $('#closeDetail').onclick=()=>d.classList.remove('open');
+ $('#copyCoords').onclick=async()=>{const text=coords(p);try{await navigator.clipboard.writeText(text);$('#copyCoords').textContent='Coordenadas copiadas ✓'}catch(e){prompt('Copia as coordenadas:',text)}};
+ d.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function renderList(){
+ const q=$('#search').value.trim().toLocaleLowerCase('pt-PT');
+ const shown=points.filter(p=>(p.name+' '+coords(p)+' '+p.id).toLocaleLowerCase('pt-PT').includes(q));
+ $('#list').innerHTML=shown.map(p=>`<article class="item"><div class="number">${p.id}</div><div class="itembody"><h3>${esc(p.name)}</h3><div class="coords">${coords(p)}</div><div class="actions"><button class="btn btn-light" data-detail="${p.id}">Ver ficha</button><a class="btn btn-primary" href="${mapsUrl(p)}" target="_blank" rel="noopener">Navegar ↗</a></div></div></article>`).join('');
+ $('#empty').hidden=shown.length>0;
+ document.querySelectorAll('[data-detail]').forEach(b=>b.onclick=()=>showDetail(points.find(p=>p.id===Number(b.dataset.detail))));
+}
+function renderMap(){
+ const W=700,H=470,pad=60;
+ const minLat=Math.min(...points.map(p=>p.lat)),maxLat=Math.max(...points.map(p=>p.lat));
+ const minLon=Math.min(...points.map(p=>p.lon)),maxLon=Math.max(...points.map(p=>p.lon));
+ const x=p=>pad+(p.lon-minLon)/(maxLon-minLon)*(W-2*pad);
+ const y=p=>H-pad-(p.lat-minLat)/(maxLat-minLat)*(H-2*pad);
+ const dots=points.map(p=>`<g data-map-point="${p.id}" tabindex="0" role="button" aria-label="${esc(p.name)}" style="cursor:pointer"><circle cx="${x(p)}" cy="${y(p)}" r="18" fill="#176b49" stroke="#fff" stroke-width="3"/><text x="${x(p)}" y="${y(p)+5}" text-anchor="middle" font="bold 14px system-ui" fill="#fff">${p.id}</text><text class="maplabel" x="${x(p)+23}" y="${y(p)-8}">${esc('H'+p.id)}</text></g>`).join('');
+ $('#schematic').innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mapa esquemático offline dos sete hidrantes"><rect width="${W}" height="${H}" fill="#e8f0e6"/><path d="M0 90 Q150 140 240 75 T460 120 T700 65 M-20 320 Q130 270 270 340 T510 290 T730 355" fill="none" stroke="#d4e2d0" stroke-width="22"/><path d="M0 90 Q150 140 240 75 T460 120 T700 65 M-20 320 Q130 270 270 340 T510 290 T730 355" fill="none" stroke="#f9fcf8" stroke-width="3" stroke-dasharray="7 8"/><text class="mapnote" x="20" y="28">N ↑</text><path d="M32 38v30m0-30-7 10m7-10 7 10" stroke="#526459" stroke-width="2" fill="none"/>${dots}<text class="mapnote" x="18" y="${H-18}">Esquema relativo · não navegável</text></svg>`;
+ document.querySelectorAll('[data-map-point]').forEach(g=>{const go=()=>showDetail(points.find(p=>p.id===Number(g.dataset.mapPoint)));g.addEventListener('click',go);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})});
+}
+function setTab(tab){
+ const isList=tab==='list';
+ $('#listView').classList.toggle('hidden',!isList);$('#mapView').classList.toggle('hidden',isList);
+ $('#listTab').setAttribute('aria-selected',String(isList));$('#mapTab').setAttribute('aria-selected',String(!isList));
+}
+$('#listTab').onclick=()=>setTab('list');$('#mapTab').onclick=()=>setTab('map');$('#search').addEventListener('input',renderList);
+$('#count').textContent=points.length;renderList();renderMap();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').then(()=>{$('#statusText').textContent='Aplicação preparada para consulta offline neste dispositivo.'}).catch(()=>{}));}
+</script>
+</body></html>
